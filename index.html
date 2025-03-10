@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .gradient-background {
+      background: rgb(146, 97, 202);
+      background: linear-gradient(180deg, rgb(133, 56, 221) 0%, rgb(139, 90, 219) 36%, rgb(193, 114, 224) 100%);
+    }
+
+    .bounce2 {
+      animation: bounce2 2s ease infinite;
+    }
+
+    @keyframes bounce2 {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+
+<body class="gradient-background">
+  <!-- Background Music (Autoplay) -->
+  <audio id="bgm" src="./music/bgmusic2.mp3" loop></audio>
+
+  <audio id="yesMusic" src="./music/happymusic.mp3"></audio>
+
+
+  <div class="flex items-center justify-center h-screen">
+    <div class="flex flex-col items-center p-4">
+      <img id="imageDisplay" src="./images/GomaCat.gif" alt="Cute kitten with flowers" class="rounded-md h-[300px]" style="object-fit: cover;" />
+      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#de9a00] my-4">Do You Wanna Go Out With Me?</h2>
+      <h2 id="valentineQuestion2" class="text-4xl font-bold italic text-[#de9a00] my-4">↓↓ Answer & Send Me Screenshot After ↓↓ </h2>
+      <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
+        <button id="yesButton"
+          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
+          Yes
+        </button>
+        <button id="noButton"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const valentineQuestion = document.getElementById('valentineQuestion');
+    const valentineQuestion2 = document.getElementById('valentineQuestion2');
+    const responseButtons = document.getElementById('responseButtons');
+    const bgm = document.getElementById('bgm');
+
+    let noClickCount = 0;
+    let buttonHeight = 48; 
+    let buttonWidth = 80;
+    let fontSize = 20; 
+    const imagePaths = [
+      "./images/GomaCat.gif",
+      "./images/image2.gif",
+      "./images/GomaSad1.gif",
+      "./images/GomaSad4.gif",
+      "./images/GomaSad3.gif",
+      "./images/GomaSad2.gif",
+      "./images/YayCat.gif"
+    ];
+
+    noButton.addEventListener('click', function() {
+      if (noClickCount < 5) {
+        noClickCount++;
+        imageDisplay.src = imagePaths[noClickCount];
+        buttonHeight += 35;
+        buttonWidth += 35;
+        fontSize += 25; 
+        yesButton.style.height = `${buttonHeight}px`; 
+        yesButton.style.width = `${buttonWidth}px`;
+        yesButton.style.fontSize = `${fontSize}px`; 
+        if (noClickCount < 6) {
+          noButton.textContent = ["No", "try again :3", "baby please", "Noooooo", "You're making my heart ache", "I cry now..."][noClickCount];
+        }
+      }
+    });
+
+    yesButton.addEventListener('click', () => {
+      imageDisplay.src = './images/YayCat.gif'; 
+      valentineQuestion.textContent = "Happpyyy!!!"; 
+      valentineQuestion2.textContent = "Taft is unfamiliar for me so let me know what you want to do ^-^"; 
+      responseButtons.style.display = 'none'; 
+      confetti(); 
+    });
+
+    // Force autoplay on page load (modern browser fix)
+    document.addEventListener("DOMContentLoaded", () => {
+      bgm.play().catch(() => {
+        console.log("Autoplay blocked, waiting for user interaction.");
+      });
+    });
+
+    // If autoplay is blocked, start music on first user click anywhere
+    document.addEventListener("click", () => {
+      if (bgm.paused) {
+        bgm.play().then(() => {
+          console.log("Music started after user interaction.");
+        }).catch(err => console.log("Music playback error:", err));
+      }
+    }, { once: true }); // Only trigger once
+
+
+    //after yes button
+
+    const yesMusic = document.getElementById('yesMusic');
+
+    yesButton.addEventListener('click', () => {
+      imageDisplay.src = './images/YayCat.gif'; 
+      valentineQuestion.textContent = "Happpyyy!!!"; 
+      valentineQuestion2.textContent = "Taft is unfamiliar for me so let me know what you want to do ^-^"; 
+      responseButtons.style.display = 'none'; 
+      confetti(); 
+
+      // Stop the background music and play the new music
+      bgm.pause();
+      bgm.currentTime = 0; // Reset background music
+      yesMusic.play();
+    });
+
+  </script>  
+</body>
+</html>
